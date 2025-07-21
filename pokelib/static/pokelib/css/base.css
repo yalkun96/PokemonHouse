@@ -1,0 +1,26 @@
+img {
+    border: 10px solid black;
+    border-radius: 10px;
+}
+img.pokemon_image {
+    width: 200px;
+    height: 200px;
+}
+
+
+img.pokemon_info {
+    margin: auto;
+    width: 250px;
+    height: 250px;
+}
+
+
+.info_container {
+    margin-left: 20%;
+    margin-right: 20%;
+    border: 5px solid;
+    border-radius: 10px;
+}
+
+
+

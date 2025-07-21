@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block info %}
+<div class="container text-center">
+  <h1>{{ pokemon.name|capfirst }}</h1>
+  <img class="pokemon_info" src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}">
+  <p>Base Experience: {{ pokemon.base_experience }}</p>
+  <p>Height: {{ pokemon.height }}</p>
+  <p>Weight: {{ pokemon.weight }}</p>
+  <p>Species: {{ pokemon.species.name }}</p>
+
+  <p><span>Types:</span>
+  {% for type in pokemon.types %}
+     <span>{{ type.type.name }}{% if not forloop.last %}, {% endif %}</span>
+    {% endfor %} <br></p>
+
+  <p><span>Abilities:
+  {% for ability in pokemon.abilities %}
+      {{ ability.ability.name }}</span>
+  {% endfor %}<br></p>
+
+  <p>{% for form in pokemon.forms %}
+    <span>Form: {{ form.name }}</span>
+    {% endfor %}</p>
+
+  <p>{% if past_types %}
+    {% for form in pokemon.forms %}
+      <span>Past form: {{ form.past_types }}</span>
+    {% endfor %}</p>
+  {% else %}
+    <p></p>
+  {% endif %}
+<ul>
+
+
+{% if pokemon.evolution_chain %}
+    <div class="evolution-chain">
+      <h3>Evolution Chain</h3>
+
+      <!-- Основной покемон -->
+      <div class="evolution-node">
+        <img src="{{ pokemon.evolution_chain.pokemon.image }}" width="96">
+        <h4>{{ pokemon.evolution_chain.pokemon.name|capfirst }}</h4>
+        {% if pokemon.evolution_chain.is_baby %}<span class="badge bg-info">Baby</span>{% endif %}
+      </div>
+
+      {% if pokemon.evolution_chain.evolves_to %}
+        <div class="evolution-arrow">↓</div>
+        <div class="evolution-branches">
+          {% for first_evo in pokemon.evolution_chain.evolves_to %}
+            <!-- Первая эволюция -->
+            <div class="evolution-branch">
+              <div class="evolution-node">
+                <h4>{{ first_evo.species.name|capfirst }}</h4>
+              </div>
+
+              {% if first_evo.evolution_details %}
+                <div class="evolution-conditions">
+                  <p>Conditions:</p>
+                  <ul>
+                    {% for detail in first_evo.evolution_details %}
+                      <li>Level {{ detail.min_level }} ({{ detail.trigger.name }})</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+
+              {% if first_evo.evolves_to %}
+                <div class="evolution-arrow">↓</div>
+                <div class="evolution-branches">
+                  {% for second_evo in first_evo.evolves_to %}
+                    <!-- Вторая эволюция -->
+                    <div class="evolution-branch">
+                      <div class="evolution-node">
+                        <h4>{{ second_evo.species.name|capfirst }}</h4>
+                      </div>
+
+                      {% if second_evo.evolution_details %}
+                        <div class="evolution-conditions">
+                          <p>Conditions:</p>
+                          <ul>
+                            {% for detail in second_evo.evolution_details %}
+                              <li>Level {{ detail.min_level }} ({{ detail.trigger.name }})</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <p>No evolution data available for this Pokémon.</p>
+  {% endif %}
+</div>
+
+<style>
+  .pokemon-info-img {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .evolution-chain {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+  }
+
+  .evolution-node {
+    text-align: center;
+    padding: 15px;
+    margin: 10px 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .evolution-arrow {
+    font-size: 24px;
+    margin: 10px 0;
+    color: #6c757d;
+  }
+
+  .evolution-branches {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .evolution-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .evolution-conditions {
+    margin: 10px 0;
+    font-size: 0.9em;
+    color: #6c757d;
+  }
+
+  .evolution-conditions ul {
+    list-style: none;
+    padding: 0;
+  }
+</style>
+{% endblock %}

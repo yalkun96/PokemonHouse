@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block info %}
+<div class="container text-center my-4">
+    <h1>Home of Pokemons</h1>
+    <div class="row">
+        {% for pokemon in pokemons %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="{% url 'pokemon-info' pokemon.pk %}">
+                        <img class="card-img-top pokemon_image" src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ pokemon.name }}</h5>
+                        <p class="card-text">ID: {{ pokemon.pokeapi_id }}</p>
+                        <a href="{% url 'pokemon-info' pokemon.pk %}" class="btn btn-primary">More Info</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No pokemons found</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

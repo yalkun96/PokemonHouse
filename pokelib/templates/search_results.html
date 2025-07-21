@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+
+{% block info %}
+  <div class="container mt-4">
+    {% if searched %}
+      <h3>Results for "{{ searched }}":</h3>
+      {% if pokemons %}
+        <ul>
+          {% for pokemon in pokemons %}
+            <div class="container text-center">
+              <h1>{{ pokemon.name|capfirst }}</h1>
+              <img class="pokemon_info" src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}">
+              <p>Base Experience: {{ pokemon.base_experience }}</p>
+              <p>Height: {{ pokemon.height }}</p>
+              <p>Weight: {{ pokemon.weight }}</p>
+            <ul>
+                {% if pokemon.evolution_chain %}
+    <div class="evolution-chain">
+      <h3>Evolution Chain</h3>
+
+      <!-- Основной покемон -->
+      <div class="evolution-node">
+        <img src="{{ pokemon.evolution_chain.pokemon.image }}" width="96">
+        <h4>{{ pokemon.evolution_chain.pokemon.name|capfirst }}</h4>
+        {% if pokemon.evolution_chain.is_baby %}<span class="badge bg-info">Baby</span>{% endif %}
+      </div>
+
+      {% if pokemon.evolution_chain.evolves_to %}
+        <div class="evolution-arrow">↓</div>
+        <div class="evolution-branches">
+          {% for first_evo in pokemon.evolution_chain.evolves_to %}
+            <!-- Первая эволюция -->
+            <div class="evolution-branch">
+              <div class="evolution-node">
+                <h4>{{ first_evo.species.name|capfirst }}</h4>
+              </div>
+
+              {% if first_evo.evolution_details %}
+                <div class="evolution-conditions">
+                  <p>Conditions:</p>
+                  <ul>
+                    {% for detail in first_evo.evolution_details %}
+                      <li>Level {{ detail.min_level }} ({{ detail.trigger.name }})</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+
+              {% if first_evo.evolves_to %}
+                <div class="evolution-arrow">↓</div>
+                <div class="evolution-branches">
+                  {% for second_evo in first_evo.evolves_to %}
+                    <!-- Вторая эволюция -->
+                    <div class="evolution-branch">
+                      <div class="evolution-node">
+                        <h4>{{ second_evo.species.name|capfirst }}</h4>
+                      </div>
+
+                      {% if second_evo.evolution_details %}
+                        <div class="evolution-conditions">
+                          <p>Conditions:</p>
+                          <ul>
+                            {% for detail in second_evo.evolution_details %}
+                              <li>Level {{ detail.min_level }} ({{ detail.trigger.name }})</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <p>No evolution data available for this Pokémon.</p>
+  {% endif %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No Pokémon found matching your query.</p>
+      {% endif %}
+    {% else %}
+      <p>No search term provided.</p>
+    {% endif %}
+  </div>
+{% endblock %}

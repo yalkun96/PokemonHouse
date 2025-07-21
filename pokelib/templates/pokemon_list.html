@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+
+{% block info %}
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+    Pokemon Types
+  </a>
+    <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="?">Types:</a></li>
+    <div class="filters">
+        <form method="get">
+            <input type="text" name="name" placeholder="Поиск по имени"
+                   value="{{ request.GET.name }}">
+
+            <select name="type">
+                <option value="">Все типы</option>
+                {% for type in all_types %}
+                    <option value="{{ type }}"
+                        {% if request.GET.type == type %}selected{% endif %}>
+                        {{ type|title }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Фильтровать</button>
+            <a href="?" class="btn">Сбросить</a>
+        </form>
+    </div>
+
+
+
+
+<div class="container text-center my-4">
+    <h1>Home of Pokemons</h1>
+    <div class="row">
+        {% for pokemon in pokemons %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="{% url 'pokemon-info' pokemon.pk %}">
+                        <img class="card-img-top pokemon_image" src="{{ pokemon.sprites.front_default }}" alt="{{ pokemon.name }}">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ pokemon.name }}</h5>
+                        <p class="card-text">ID: {{ pokemon.pokeapi_id }}</p>
+                        <a href="{% url 'pokemon-info' pokemon.pk %}" class="btn btn-primary">More Info</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No pokemons found</p>
+        {% endfor %}
+
+
+{% endblock %}
