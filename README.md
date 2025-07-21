@@ -41,6 +41,36 @@ Pokelib is a Django-based web application that displays Pokémon data using [Pok
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/https://github.com/yalkun96/pokelib.git
+   https://github.com/yalkun96/PokemonHouse
    cd pokelib
    
+Build the Docker image:
+
+docker build -t pokelib-app .
+Run the container:
+
+docker run -p 8000:8000 pokelib-app
+Open in your browser:
+
+http://localhost:8000
+
+
+Local Development (no Docker)
+Create and activate virtual environment:
+
+python -m venv venv
+source venv/bin/activate
+
+Install dependencies:
+pip install -r requirements.txt
+
+Run migrations:
+python manage.py migrate
+
+Fetch Pokémon and chains (optional):
+python manage.py fetch_pokemons
+python manage.py fetch_chain
+
+Start development server:
+
+python manage.py runserver
